@@ -50,25 +50,17 @@ public class Painter {
     }
 
 
-    void testSequence() { //Does sequence work correctly?
+    void testSequence() {
         Sequence seq = new Sequence();
         currentPalette.makeBasic();
         for(int i = 0; i < currentPalette.size(); i++){
             seq.add(new Picture(currentPalette.get(i)));
         }
-
         while (true) {
-            for(int i = 0; i < currentPalette.size(); i++) {
-                s.sendPicture(seq.get(i));
-
-                try {
-                    Thread.sleep(1000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-            }
+            s.sendSequence(seq);
         }
     }
+
     void spectrum() { //Should work
         Palette gradient = new Palette();
         gradient.makeSpectrum();
@@ -133,63 +125,94 @@ public class Painter {
         //Iterate through 'circle'
         LedBar currentBar = setup.bars.get(1);
         while(true) {
-                if(currentBar.leftRow){
-                    Composition runnerC = new Composition(initLeft);
-                    runnerC.setAddressByte(currentBar.id);
-                    for (int j = 0; j < Config.NUMBER_OF_LEDS; j++) {
-                        s.sendComposition(runnerC);
-                        runnerC.shiftRightS();
-                        runnerC.shiftRightS();
-                        runnerC.shiftRightS();
-                        runnerC.setPoint(1, colBack);
-                        runnerC.setPoint(2, colBack);
-                        runnerC.setPoint(3, colBack);
-                        try {
-                            Thread.sleep(16);
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
-                        }
+            if(currentBar.leftRow){
+                Composition runnerC = new Composition(initLeft);
+                runnerC.setAddressByte(currentBar.id);
+                for (int j = 0; j < Config.NUMBER_OF_LEDS; j++) {
+                    s.sendComposition(runnerC);
+                    runnerC.shiftRightS();
+                    runnerC.setPoint(1, colBack);
+                    try {
+                        Thread.sleep(16);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
                     }
                 }
-                else{
-                    Composition runnerC = new Composition(initRight);
-                    runnerC.setAddressByte(currentBar.id);
-                    for (int j = 0; j < Config.NUMBER_OF_LEDS; j++) {
-                        s.sendComposition(runnerC);
-                        runnerC.shiftLeftS();
-                        runnerC.shiftLeftS();
-                        runnerC.shiftLeftS();
-                        runnerC.setPoint(122, colBack);
-                        runnerC.setPoint(121, colBack);
-                        runnerC.setPoint(120, colBack);
-                        try {
-                            Thread.sleep(16);
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                }
-            currentBar = currentBar.hnext;
             }
+            else{
+                Composition runnerC = new Composition(initRight);
+                runnerC.setAddressByte(currentBar.id);
+                for (int j = 0; j < Config.NUMBER_OF_LEDS; j++) {
+                    s.sendComposition(runnerC);
+                    runnerC.shiftLeftS();
+                    runnerC.setPoint(122, colBack);
+                    try {
+                        Thread.sleep(16);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+            currentBar = currentBar.hnext;
+        }
     }
 
     void somethingSequence() {
         Sequence seq = new Sequence();
-        currentPalette.makeSomething();
+        currentPalette.makeBasic();
         for(int i = 0; i < currentPalette.size(); i++){
             seq.add(new Picture(currentPalette.get(i)));
         }
 
         while (true) {
-            for(int i = 0; i < currentPalette.size(); i++) {
-                s.sendPicture(seq.get(i));
+            s.sendSequence(seq);
+        }
+    }
+    
+    //Under construction
+    void circleCounter(Color colBack, Color colPoint){ //A circular wandering point slowly filling the vertical lines
 
-                try {
-                    Thread.sleep(16);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
+        //Initialize
+        Composition initLeft = new Composition(colBack);
+        s.sendCompositionToAll(initLeft);
+        initLeft.setPoint(1,  colPoint);
+        initLeft.setPoint(2,  colPoint);
+        initLeft.setPoint(3,  colPoint);
+        Composition initRight = new Composition(initLeft);
+        initRight.invert();
+
+        //Iterate through 'circle'
+        LedBar currentBar = setup.bars.get(1);
+        while(true) {
+            if(currentBar.leftRow){
+                Composition runnerC = new Composition(initLeft);
+                runnerC.setAddressByte(currentBar.id);
+                for (int j = 0; j < Config.NUMBER_OF_LEDS; j++) {
+                    s.sendComposition(runnerC);
+                    runnerC.shiftRightS();
+                    runnerC.setPoint(1, colBack);
+                    try {
+                        Thread.sleep(16);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
                 }
             }
+            else{
+                Composition runnerC = new Composition(initRight);
+                runnerC.setAddressByte(currentBar.id);
+                for (int j = 0; j < Config.NUMBER_OF_LEDS; j++) {
+                    s.sendComposition(runnerC);
+                    runnerC.shiftLeftS();
+                    runnerC.setPoint(122, colBack);
+                    try {
+                        Thread.sleep(16);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+            currentBar = currentBar.hnext;
         }
     }
 

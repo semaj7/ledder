@@ -88,4 +88,17 @@ public class Sender {
         }
     }
 
+    void sendSequence(Sequence seq){
+        for(int i = 0; i < seq.size(); i++){
+            System.out.println("Sending "+ i+ "-th picture of sequence");
+            sendPicture(seq.get(i));
+            try {
+                Thread.sleep(seq.timeIntervals.get(i));
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+
+    }
+
 }
