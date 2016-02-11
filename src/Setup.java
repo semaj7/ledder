@@ -16,14 +16,14 @@ public class Setup {
 
 
     // the position in the array is also the id of the bar
-    public static ArrayList<LedBar> bars = new ArrayList<LedBar>();
+    public ArrayList<LedBar> bars = new ArrayList<LedBar>();
 
 
 
     //Inside the bars, the last LED is on the entrance side/faces upwards
 
 
-    static void setupBars() {
+     void setupBars() {
         bars.add(new LedBar(0, false, true));
         bars.add(new LedBar(1, true, true));
         bars.add(new LedBar(2, false, false));

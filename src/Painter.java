@@ -1,3 +1,6 @@
+import org.jcp.xml.dsig.internal.dom.DOMPGPData;
+
+import javax.security.auth.login.Configuration;
 import java.awt.*;
 
 /**
@@ -104,6 +107,9 @@ public class Painter {
                     runnerC.shiftRightS();
                     runnerC.shiftRightS();
                     runnerC.setPoint(1, Color.WHITE);
+                    runnerC.setPoint(2, Color.WHITE);
+                    runnerC.setPoint(3, Color.WHITE);
+
                     try {
                         Thread.sleep(6);
                     } catch (InterruptedException e) {
@@ -113,34 +119,31 @@ public class Painter {
             }
         }
     }
-    void circleWanderingPoint(Color colBack, Color colPoint){  //Not tested yet
-        //Would be faster to create sequence instead of calculating each circle again.
+    void circleWanderingPoint(Color colBack, Color colPoint){
 
         //Initialize
         Composition initLeft = new Composition(colBack);
-        Picture init = new Picture(initLeft);
-        s.sendPicture(init);
-
-        initLeft.setBand(2, 1, colPoint);
+        s.sendCompositionToAll(initLeft);
+        initLeft.setPoint(1,  colPoint);
+        initLeft.setPoint(2,  colPoint);
+        initLeft.setPoint(3,  colPoint);
         Composition initRight = new Composition(initLeft);
         initRight.invert();
 
-
-
+        //Iterate through 'circle'
+        LedBar currentBar = setup.bars.get(1);
         while(true) {
-            for (int i = 0; i <= Config.ADDR_UPPER; i++) {
-                if(!setup.bars.get(i).horizontal){
-                    continue;
-                }
-                if(setup.bars.get(i).leftRow){
+                if(currentBar.leftRow){
                     Composition runnerC = new Composition(initLeft);
-                    runnerC.setAddressByte(i);
+                    runnerC.setAddressByte(currentBar.id);
                     for (int j = 0; j < Config.NUMBER_OF_LEDS; j++) {
                         s.sendComposition(runnerC);
                         runnerC.shiftRightS();
                         runnerC.shiftRightS();
                         runnerC.shiftRightS();
                         runnerC.setPoint(1, colBack);
+                        runnerC.setPoint(2, colBack);
+                        runnerC.setPoint(3, colBack);
                         try {
                             Thread.sleep(16);
                         } catch (InterruptedException e) {
@@ -150,13 +153,15 @@ public class Painter {
                 }
                 else{
                     Composition runnerC = new Composition(initRight);
-                    runnerC.setAddressByte(i);
+                    runnerC.setAddressByte(currentBar.id);
                     for (int j = 0; j < Config.NUMBER_OF_LEDS; j++) {
                         s.sendComposition(runnerC);
                         runnerC.shiftLeftS();
                         runnerC.shiftLeftS();
                         runnerC.shiftLeftS();
                         runnerC.setPoint(122, colBack);
+                        runnerC.setPoint(121, colBack);
+                        runnerC.setPoint(120, colBack);
                         try {
                             Thread.sleep(16);
                         } catch (InterruptedException e) {
@@ -164,8 +169,8 @@ public class Painter {
                         }
                     }
                 }
+            currentBar = currentBar.hnext;
             }
-        }
     }
 
     void somethingSequence() {
