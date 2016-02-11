@@ -1,3 +1,4 @@
+import java.io.IOException;
 import java.net.*;
 
 /**
@@ -32,19 +33,16 @@ public class Sender {
     }
 
     void sendCompositionTo(Composition c, int dest) {
-        System.out.println("Sending composition to " + c.getAddressByte());
-
         c.setAddressByte(dest);
         sendComposition(c);
     }
 
     void sendComposition(Composition c) {
-        System.out.println("Sending composition to " + c.getAddressByte());
         DatagramPacket packet = new DatagramPacket(c.bytes, Config.DATA_SIZE, aHost, Config.PORT);
         try {
-
             socket = new DatagramSocket();
             socket.send(packet);
+            System.out.println("Sent composition to " + c.getAddressByte());
         } catch (SocketTimeoutException e) {
             e.printStackTrace();
         } catch (Exception e) {
@@ -73,13 +71,21 @@ public class Sender {
 
     }
 
-    void sendPicture2(Picture picture) {
-        for (int i = 0; i < picture.size(); i++) {
-            sendComposition(picture.get(i));
+    void sendCompositionToAll(Composition comp){
+        Composition temp = new Composition(comp);
+        try {
+            socket = new DatagramSocket();
+            for(int i = 0; i < 15; i++){
+                temp.setAddressByte(i);
+                DatagramPacket packet = new DatagramPacket(temp.bytes, Config.DATA_SIZE, aHost, Config.PORT);
+                socket.send(packet);
+            }
+            System.out.println("Sending composition to all");
+        } catch (SocketException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
-    }
-    void sendToAll(){
-
     }
 
 }

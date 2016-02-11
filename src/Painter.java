@@ -17,29 +17,21 @@ public class Painter {
         currentPalette = new Palette();
     }
 
-    void testPicture1() {
-        Composition comp = new Composition(Color.YELLOW);
+    void testPicture() {
         Picture temp = new Picture();
-        temp.makeAll(comp);
-        s.sendPicture(temp);
-
-    }
-    void testPicture2(){
-        Composition comp = new Composition(Color.RED);
-        Picture temp = new Picture();
-        temp.makeAll(comp);
+        temp.makeAll(new Composition(Color.YELLOW));
         s.sendPicture(temp);
     }
 
     void testNumerate1() {
         Composition comp = new Composition(Color.YELLOW);
         for(int i = Config.ADDR_LOWER; i < Config.ADDR_UPPER; i++ ) {
+            s.sendCompositionTo(comp, i);
             try {
                 Thread.sleep(1000);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-            s.sendCompositionTo(comp, i);
         }
     }
     void testNumerate2() {
@@ -74,19 +66,15 @@ public class Painter {
             }
         }
     }
-    void spectrumSequence() { //Should work
-        Sequence seq = new Sequence();
-        currentPalette.makeSpectrum();
-        for(int i = 0; i < currentPalette.size(); i++){
-            seq.add(new Picture(currentPalette.get(i)));
-        }
+    void spectrum() { //Should work
+        Palette gradient = new Palette();
+        gradient.makeSpectrum();
 
         while (true) {
-            for(int i = 0; i < currentPalette.size(); i++) {
-                s.sendPicture(seq.get(i));
-
+            for(int i = 0; i < gradient.size(); i++) {
+                s.sendCompositionToAll(new Composition(gradient.get(i)));
                 try {
-                    Thread.sleep(100);
+                    Thread.sleep(17);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
@@ -179,7 +167,6 @@ public class Painter {
             }
         }
     }
-
 
     void somethingSequence() {
         Sequence seq = new Sequence();

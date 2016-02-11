@@ -19,13 +19,12 @@ public class Palette extends ArrayList<Color>{
         add(Color.WHITE);
         add(Color.BLACK);
     }
-    void makeSpectrum(){ //// 1000 entries
+    void makeSpectrum(){
         clear();
-        int numberOfColors = 1000;
-        int d = 1/numberOfColors;
-        for(float i = 0; i < 1; i+=d)
-        {
-            add( Color.getHSBColor(i, (float) 0.5,(float) 0.5));
+        float numberOfColors = 100;
+        float d = (float)1.0 / numberOfColors;
+        for(float i = 0; i < 1 ; i+=d){
+            add(Color.getHSBColor(i, (float) 0.5,(float) 0.5));
         }
     }
 

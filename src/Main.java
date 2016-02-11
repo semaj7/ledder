@@ -1,3 +1,4 @@
+import java.awt.*;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 
@@ -11,14 +12,12 @@ public class Main {
         Painter p = new Painter();
 
         //The cool ones
-        p.spectrumSequence();
+       p.spectrum();
         //p.numerateWanderingPoint();
-        //p.circleWanderingPoint(Color.WHITE, Color.RED);
+        //    p.circleWanderingPoint(Color.WHITE, Color.RED);
 
 
-        // p.testPicture1();
-        //  p.testPicture2();
-       // p.testPicture3();
+        // p.testPicture();
         // p.testNumerate1();
         // p.testNumerate2();
         //   p.testSequence();
