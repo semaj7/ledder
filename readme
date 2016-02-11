@@ -1,0 +1,40 @@
+Hi!
+
+
+IMPORTANT:
+Data Hierarchie: 'Composition': representation of the data that will be sent to a bar.
+                                the class contains a set of operations, like f.ex. 'Rshift'
+                'Picture'    : a combination of compositions that will change the some bars in the room (or all)
+                'Sequence'   : a list of pictures that are to be sent sequentially, like a video for the room.
+
+
+
+NOT THAT IMPORTANT:
+'Sender'
+The 'Sender' can send a composition or picture to the receiver. (Later: also sequences)
+Room for optimization: create a asynchron worker that checks for new pictures every 16ms. If there is one, send it.
+
+'Palette'
+Is a list contining colors. It provides procedures which create special palettes,
+like f.ex. color gradients.
+
+'Painter'
+This is where the creative part happens.
+This class contains methods invoking and directing shows.
+
+'Setup' and 'LedBar' and 'Config'
+Represent the phisical setup of the ledbars. Used from the painter.
+'Config' should enable reusability of this program.. I shot for the stars,
+but it turned out to be a little pseudo.. :P
+
+'RgbColor'
+Used before, but now Java's color seems to be quite enough.
+Gonna keep it for now, just in case :)
+
+
+
+
+
+
+
+
