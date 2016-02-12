@@ -1,7 +1,9 @@
+import com.sun.tools.javac.code.Type;
 import org.jcp.xml.dsig.internal.dom.DOMPGPData;
 
 import javax.security.auth.login.Configuration;
 import java.awt.*;
+import java.util.HashMap;
 
 /**
  * Created by james on 06/02/16.
@@ -116,6 +118,7 @@ public class Painter {
         //Initialize
         Composition initLeft = new Composition(colBack);
         s.sendCompositionToAll(initLeft);
+        s.sendCompositionToAll(initLeft);
         initLeft.setPoint(1,  colPoint);
         initLeft.setPoint(2,  colPoint);
         initLeft.setPoint(3,  colPoint);
@@ -125,7 +128,8 @@ public class Painter {
         //Iterate through 'circle'
         LedBar currentBar = setup.bars.get(1);
         while(true) {
-            if(currentBar.leftRow){
+            //TODO: make übergänge smooth & punkt tritt nie ganz aus
+            if(!currentBar.leftRow){
                 Composition runnerC = new Composition(initLeft);
                 runnerC.setAddressByte(currentBar.id);
                 for (int j = 0; j < Config.NUMBER_OF_LEDS; j++) {
@@ -153,6 +157,7 @@ public class Painter {
                     }
                 }
             }
+
             currentBar = currentBar.hnext;
         }
     }
@@ -169,9 +174,8 @@ public class Painter {
         }
     }
     
-    //Under construction
     void circleCounter(Color colBack, Color colPoint){ //A circular wandering point slowly filling the vertical lines
-
+        //TODO: vbro ist nicht immer passend
         //Initialize
         Composition initLeft = new Composition(colBack);
         s.sendCompositionToAll(initLeft);
@@ -181,18 +185,34 @@ public class Painter {
         Composition initRight = new Composition(initLeft);
         initRight.invert();
 
+        //Initialize Counters
+        HashMap<Integer, FallingCounter> counters = new HashMap<>();
+        counters.put(0, new FallingCounter(colBack, colPoint, 0, 17));
+        counters.put(2, new FallingCounter(colBack, colPoint, 2, 17));
+        counters.put(3, new FallingCounter(colBack, colPoint, 3, 17));
+        counters.put(10, new FallingCounter(colBack, colPoint, 10, 17));
+        counters.put(11, new FallingCounter(colBack, colPoint, 11, 17));
+        counters.put(13, new FallingCounter(colBack, colPoint, 13, 17));
+        counters.put(14, new FallingCounter(colBack, colPoint, 14, 17));
+
         //Iterate through 'circle'
         LedBar currentBar = setup.bars.get(1);
         while(true) {
-            if(currentBar.leftRow){
+            if(!currentBar.leftRow){
                 Composition runnerC = new Composition(initLeft);
                 runnerC.setAddressByte(currentBar.id);
-                for (int j = 0; j < Config.NUMBER_OF_LEDS; j++) {
+                for (int j = 0; j < Config.NUMBER_OF_LEDS; j+=1) {
                     s.sendComposition(runnerC);
                     runnerC.shiftRightS();
                     runnerC.setPoint(1, colBack);
+                    //Update counters
+                    for(int i : setup.verticals){
+                        if(counters.containsKey(i)){
+                            s.sendComposition(counters.get(i).fall());
+                        }
+                    }
                     try {
-                        Thread.sleep(16);
+                        Thread.sleep(17);
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
@@ -201,19 +221,29 @@ public class Painter {
             else{
                 Composition runnerC = new Composition(initRight);
                 runnerC.setAddressByte(currentBar.id);
-                for (int j = 0; j < Config.NUMBER_OF_LEDS; j++) {
+                for (int j = 0; j < Config.NUMBER_OF_LEDS; j+=1) {
                     s.sendComposition(runnerC);
                     runnerC.shiftLeftS();
                     runnerC.setPoint(122, colBack);
+                    //Update counters
+                    for(int i : setup.verticals){
+                        if(counters.containsKey(i)){
+                            s.sendComposition(counters.get(i).fall());
+                        }
+                    }
                     try {
-                        Thread.sleep(16);
+                        Thread.sleep(17);
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
                 }
             }
+            if(currentBar.vbro != null){
+                s.sendComposition(counters.get(currentBar.vbro.id).insert());
+            }
             currentBar = currentBar.hnext;
         }
     }
+
 
 }

@@ -14,8 +14,8 @@ public class Main {
         //The cool ones
        p.spectrum();
         //p.numerateWanderingPoint();
-        //    p.circleWanderingPoint(Color.WHITE, Color.RED);
-
+        //p.circleWanderingPoint(Color.BLUE, Color.WHITE);
+        // p.circleCounter(Color.BLUE, Color.WHITE);
 
         // p.testPicture();
         // p.testNumerate1();

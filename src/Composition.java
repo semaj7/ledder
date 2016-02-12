@@ -20,6 +20,7 @@ public class Composition{
     Composition(Composition source){
         this.bytes = source.bytes.clone();
     }
+
     Composition(Color col){
         bytes = new byte[367];
         makeAllOne(col);
@@ -152,7 +153,7 @@ public class Composition{
         makeAllOne(color);
     }
 
-    void zeroCheck(int x){
+    static void zeroCheck(int x){
         // Location is the number of the LED. (there's no 0!)
          if(x == 0){
                 throw new IndexOutOfBoundsException();

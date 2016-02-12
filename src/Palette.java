@@ -21,7 +21,7 @@ public class Palette extends ArrayList<Color>{
     }
     void makeSpectrum(){
         clear();
-        float numberOfColors = 100;
+        float numberOfColors = 1000;
         float d = (float)1.0 / numberOfColors;
         for(float i = 0; i < 1 ; i+=d){
             add(Color.getHSBColor(i, (float) 0.5,(float) 0.5));

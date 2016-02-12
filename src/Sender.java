@@ -42,7 +42,7 @@ public class Sender {
         try {
             socket = new DatagramSocket();
             socket.send(packet);
-            System.out.println("Sent composition to " + c.getAddressByte());
+            //System.out.println("Sent composition to " + c.getAddressByte());
         } catch (SocketTimeoutException e) {
             e.printStackTrace();
         } catch (Exception e) {
@@ -57,7 +57,7 @@ public class Sender {
         try {
             socket = new DatagramSocket();
             for (int i = 0; i < picture.size(); i++) {
-                System.out.println("Sending composition to " + picture.get(i).getAddressByte());
+                //System.out.println("Sending composition to " + picture.get(i).getAddressByte());
                 DatagramPacket packet = new DatagramPacket(picture.get(i).bytes, Config.DATA_SIZE, aHost, Config.PORT);
                 socket.send(packet);
             }
@@ -80,7 +80,7 @@ public class Sender {
                 DatagramPacket packet = new DatagramPacket(temp.bytes, Config.DATA_SIZE, aHost, Config.PORT);
                 socket.send(packet);
             }
-            System.out.println("Sending composition to all");
+            //System.out.println("Sending composition to all");
         } catch (SocketException e) {
             e.printStackTrace();
         } catch (IOException e) {
@@ -90,7 +90,7 @@ public class Sender {
 
     void sendSequence(Sequence seq){
         for(int i = 0; i < seq.size(); i++){
-            System.out.println("Sending "+ i+ "-th picture of sequence");
+            System.out.println("Sending "+ i + "-th picture of sequence");
             sendPicture(seq.get(i));
             try {
                 Thread.sleep(seq.timeIntervals.get(i));
